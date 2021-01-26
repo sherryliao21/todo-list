@@ -4,7 +4,11 @@ const Schema = mongoose.Schema
 const todoSchema = new Schema({
   name: {
     type: String, // data type is string
-    required: true // this data is required
+    required: true, // this data is required
+  },
+  isDone: {
+    type: Boolean,
+    default: false, // 預設狀態為false(預設todo是未完成的)
   }
 })
 // export module
