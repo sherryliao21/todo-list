@@ -2,24 +2,18 @@ const express = require('express')
 const app = express()
 const port = 3000
 const exphbs = require('express-handlebars')
-const mongoose = require('mongoose')
-const db = mongoose.connection
+// mongoose 連線設定只需要被執行，不須接到任何回傳參數再利用，所以不用設變數
+require('./config/mongoose')
 const Todo = require('./models/todo')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const routes = require('./routes') // 預設會自動找到index.js檔案
 // connect mongodb database, also fix deprecated methods
-mongoose.connect('mongodb://localhost/todo-list', { useNewUrlParser: true, useUnifiedTopology: true })
+
 // get database connection status 
 
 // show error msg if connection failed
-db.on('error', () => {
-  console.log('mongodb error!')
-})
-// show success msg once connected
-db.once('open', () => {
-  console.log('mongodb connected!')
-})
+
 
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
@@ -29,62 +23,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 
 app.use(routes)
-
-
-
-app.get('/todos/new', (req, res) => {
-  return res.render('new')
-})
-
-app.get('/todos/:id', (req, res) => {
-  const id = req.params.id
-  return Todo.findById(id)
-    .lean()
-    .then((todo) => res.render('detail', { todo }))
-    .catch(error => console.log(error))
-})
-
-app.get('/todos/:id/edit', (req, res) => {
-  const id = req.params.id
-  return Todo.findById(id)
-    .lean()
-    .then((todo) => res.render('edit', { todo }))
-    .catch(error => console.log(error))
-})
-
-app.post('/todos', (req, res) => {
-  const name = req.body.name
-  return Todo.create({ name })
-    .then(() => res.redirect('/'))
-    .catch(error => console.log(error))
-})
-
-app.put('/todos/:id', (req, res) => {
-  const id = req.params.id
-  const { name, isDone } = req.body
-  return Todo.findById(id)
-    .then(todo => {
-      todo.name = name
-      // if (todo.isDone === 'on') {
-      //   todo.isDone = true
-      // } else {
-      //   todo.isDone = false
-      // }
-      todo.isDone = isDone === 'on'
-      return todo.save()
-    })
-    .then(() => res.redirect(`/todos/${id}`))
-    .catch(error => console.log(error))
-})
-
-app.delete('/todos/:id', (req, res) => {
-  const id = req.params.id
-  return Todo.findById(id)
-    .then(todo => todo.remove())
-    .then(() => res.redirect('/'))
-    .catch(error => console.log(error))
-
-})
 
 app.listen(port, () => {
   console.log(`Express is listening on https://localhost:${port}`)
