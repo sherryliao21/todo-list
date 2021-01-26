@@ -7,6 +7,7 @@ const db = mongoose.connection
 const Todo = require('./models/todo')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
+const routes = require('./routes') // 預設會自動找到index.js檔案
 // connect mongodb database, also fix deprecated methods
 mongoose.connect('mongodb://localhost/todo-list', { useNewUrlParser: true, useUnifiedTopology: true })
 // get database connection status 
@@ -27,13 +28,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(methodOverride('_method'))
 
-app.get('/', (req, res) => {
-  Todo.find() // get all data from Todo model
-    .lean() // turn Mongoose model into JavaScript data array
-    .sort({ _id: 'asc' }) // 正序是 asc 反序的話就是desc
-    .then(todos => res.render('index', { todos }))
-    .catch(error => console.error(error))
-})
+app.use(routes)
+
+
 
 app.get('/todos/new', (req, res) => {
   return res.render('new')
