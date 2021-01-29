@@ -9,8 +9,20 @@
     integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 </head>
 
-<body>
-  {{{ body }}}
+<body class="bg-light">
+  <header>
+    <nav class="navbar navbar-dark bg-primary justify-content-between">
+      <a class="navbar-brand" href="/">Todo List</a>
+      <a class="btn btn-outline-light" href="/todos/new">Create</a>
+    </nav>
+  </header>
+  <main>
+    <div class="container mt-3">
+      {{{ body }}}
+    </div>
+    </div>
+  </main>
+
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
     crossorigin="anonymous"></script>
