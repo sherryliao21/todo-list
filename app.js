@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const PORT = process.env.PORT || 3000
 const exphbs = require('express-handlebars')
 // mongoose 連線設定只需要被執行，不須接到任何回傳參數再利用，所以不用設變數
 require('./config/mongoose')
@@ -24,6 +24,6 @@ app.use(methodOverride('_method'))
 
 app.use(routes)
 
-app.listen(port, () => {
-  console.log(`Express is listening on https://localhost:${port}`)
+app.listen(PORT, () => {
+  console.log(`App is running on http://localhost:${PORT}`)
 })

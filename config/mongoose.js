@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const db = mongoose.connection
+const MONGODB_URI = process.env.MOGODB_URI || 'mongodb://localhost/todo-list'
 
-mongoose.connect('mongodb://localhost/todo-list', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 db.on('error', () => {
   console.log('mongodb error!')
