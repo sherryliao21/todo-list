@@ -11,7 +11,7 @@ router.get('/:id', (req, res) => {
   const id = req.params.id
   return Todo.findById(id)
     .lean()
-    .then((todo) => res.render('detail', { todo }))
+    .then(todo => res.render('detail', { todo }))
     .catch(error => console.log(error))
 })
 
@@ -19,13 +19,13 @@ router.get('/:id/edit', (req, res) => {
   const id = req.params.id
   return Todo.findById(id)
     .lean()
-    .then((todo) => res.render('edit', { todo }))
+    .then(todo => res.render('edit', { todo }))
     .catch(error => console.log(error))
 })
 
 router.post('/', (req, res) => {
   const name = req.body.name
-  return Todo.create({ name })
+  return Todo.create({ name }) // isDone is false by default
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
@@ -54,7 +54,6 @@ router.delete('/:id', (req, res) => {
     .then(todo => todo.remove())
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
-
 })
 
 module.exports = router
