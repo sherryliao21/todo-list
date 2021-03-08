@@ -14,6 +14,7 @@ router.post('/login', passport.authenticate('local', {
 
 router.get('/logout', (req, res) => {
   req.logOut()
+  req.flash('success_msg', 'You have logged out successfully.')
   res.redirect('/users/login')
 })
 
@@ -23,20 +24,35 @@ router.get('/register', (req, res) => {
 
 router.post('/register', (req, res) => {
   const { name, email, password, confirmPassword } = req.body
+  // check if input is in incorrect format
+  const errors = []
+  if (!name || !email || !password || !confirmPassword) {
+    errors.push({ message: 'All fields are required.' })
+  }
+  if (name && email && password && confirmPassword) {
+    if (password !== confirmPassword) {
+      errors.push({ message: 'Password mismatched!' })
+    }
+  }
+  if (errors.length) {
+    return res.render('register', {
+      errors, name, email, password, confirmPassword
+    })
+  }
   Users.findOne({ email })
     .then(user => {
       if (user) {
-        console.log('User already exists.')
+        errors.push({ message: 'This email has already been registered.' })
         return res.render('register', {
-          name, email, password, confirmPassword
+          errors, name, email, password, confirmPassword
         })
-      } else {
-        return Users.create({
-          name, email, password
-        })
-          .then(() => res.redirect('/'))
-          .catch(error => console.log(error))
       }
+      return Users.create({
+        name, email, password
+      })
+        .then(() => res.redirect('/'))
+        .catch(error => console.log(error))
+
     })
 })
 
