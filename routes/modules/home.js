@@ -3,7 +3,8 @@ const router = express.Router()
 const Todo = require('../../models/todo')
 
 router.get('/', (req, res) => {
-  Todo.find()
+  const userID = req.user._id
+  Todo.find({ userID })
     .lean()
     .sort({ _id: 'asc' })
     .then(todos => res.render('index', { todos }))
