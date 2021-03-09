@@ -1,22 +1,26 @@
 const express = require('express')
-const app = express()
-const PORT = process.env.PORT || 3000
-require('./config/mongoose') // mongoose 連線設定只需要被執行，不須接到任何回傳參數再利用，所以不用設變數
-const Todo = require('./models/todo')
-const routes = require('./routes') // 預設會自動找到index.js檔案
-
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const session = require('express-session')
-const usePassport = require('./config/passport')
 const flash = require('connect-flash')
+
+// 如果應用程式不是在「正式上線模式 (production mode)」中執行，就透過 dotenv 去讀取在 env 檔案裡的資訊
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
+const routes = require('./routes') // 預設會自動找到index.js檔案
+const usePassport = require('./config/passport')
+require('./config/mongoose') // mongoose 連線設定只需要被執行，不須接到任何回傳參數再利用，所以不用設變數
+const app = express()
+const PORT = process.env.PORT
 
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 
 app.use(session({
-  secret: 'ThisIsMySecret',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }))
