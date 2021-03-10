@@ -26,7 +26,7 @@ db.once('open', () => {
       const userID = user._id
       return Promise.all(Array.from(
         { length: 10 },
-        (_, i) => Todo.create({ name: `name-${i}`, userID })
+        (_, i) => Todo.create({ name: `name-${i}`, userID }) // 第一個參數不會用到所以用 _ 代替
       ))
     })
     .then(() => {
